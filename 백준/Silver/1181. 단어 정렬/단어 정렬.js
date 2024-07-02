@@ -14,16 +14,8 @@ for(let i = 1 ; i <= n ; i++) {
 const set = new Set(arr);
 arr = [...set];
 
-arr.sort((a, b) => {
-    if (a.length !== b.length)
-        return a.length - b.length;
-    else {
-        if (a < b)
-            return -1;
-        else
-            return 0;
-    }
-})
+arr.sort();
+arr.sort((a, b) => a.length - b.length);
 
 for(let j = 0 ; j < arr.length ; j++)
     result += arr[j] + "\n";
