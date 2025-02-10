@@ -1,11 +1,13 @@
 const input = require("fs")
-    .readFileSync("/dev/stdin")
-    .toString()
-    .split("\n")
-    .map((el) => el.split(" ").map(Number));
-const t = input[0][0];
-let result;
-for(let i = 1 ; i <= t ; i++) {
-    result = input[i][0] + input[i][1];
-    console.log("Case #" + i + ": " + result);
+  .readFileSync(process.platform === "linux" ? "/dev/stdin" : "./input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const num = parseInt(input[0]);
+
+for (let i = 1; i < num + 1; i++) {
+  const [a, b] = input[i].split(" ").map((el) => parseInt(el));
+  const result = a + b;
+  console.log("Case #" + i + ": " + result);
 }
