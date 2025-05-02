@@ -20,11 +20,10 @@ rl.on("close", () => {
   let result = 0;
 
   for (let i = 0; i < N; i++) {
-    for (let k = 1; k < N; k++) {
-      for (let l = 2; l < N; l++) {
+    for (let k = i + 1; k < N; k++) {
+      for (let l = k + 1; l < N; l++) {
         let sum = cards[i] + cards[k] + cards[l];
-        if (sum <= M && result < sum && i !== k && i !== l && k !== l)
-          result = sum;
+        if (sum <= M && result < sum) result = sum;
       }
     }
   }
