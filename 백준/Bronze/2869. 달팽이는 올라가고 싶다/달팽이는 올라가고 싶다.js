@@ -14,13 +14,7 @@ rl.on("line", (line) => {
 
 rl.on("close", () => {
   const [A, B, V] = input;
-  let days;
+  const day = Math.ceil((V - A) / (A - B)) + 1;
 
-  days = Math.ceil(V / (A - B));
-
-  while ((A - B) * (days - 1) + B >= V) {
-    days -= 1;
-  }
-
-  console.log(days);
+  console.log(day);
 });
