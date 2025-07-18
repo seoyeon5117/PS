@@ -20,10 +20,6 @@ rl.on("close", () => {
     sticker.push(input[t * 3 + 2].split(" ").map(Number));
     sticker.push(input[t * 3 + 3].split(" ").map(Number));
 
-    const visited = Array.from({ length: 2 }, () => new Array(n).fill(false));
-    const dx = [-1, 0];
-    const dy = [0, 1];
-
     const dp = Array.from({ length: 2 }, () => new Array(n).fill(0)); // dp가 0이면 방문 안했다는 뜻
 
     dp[0][0] = sticker[0][0]; // 0행에서 스티커 선택
