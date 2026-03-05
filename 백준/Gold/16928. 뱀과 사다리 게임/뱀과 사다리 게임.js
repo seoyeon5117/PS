@@ -12,37 +12,52 @@ rl.on("line", (line) => {
 });
 
 rl.on("close", () => {
-  const [N, M] = input[0].split(" ").map(Number);
-  const map = new Map();
-  for (let i = 1; i <= N + M; i++) {
-    const [from, to] = input[i].split(" ").map(Number);
-    map.set(from, to);
+  const [N, M] = input[0].split(" ").map((c) => +c);
+  const ladder = new Map();
+  const snake = new Map();
+  for (let n = 0; n < N; n++) {
+    const [k, v] = input[1 + n].split(" ").map((c) => +c);
+    ladder.set(k, v);
+  }
+  for (let m = 0; m < M; m++) {
+    const [k, v] = input[1 + N + m].split(" ").map((c) => +c);
+    snake.set(k, v);
   }
 
+  let result = 0;
+  let idx = 0;
   const queue = [];
-  const count = new Array(101).fill(0); // 각 칸까지 주사위 몇 번 굴려서 도달하는지
-  const visited = new Array(101).fill(false);
+  queue.push([1, 0]);
+  const visited = new Array(100).fill(false);
+  while (queue.length > idx) {
+    const [node, cnt] = queue[idx];
 
-  queue.push(1);
-  let index = 0;
-  while (queue[index]) {
-    let now = queue[index++];
+    if (!visited[node]) {
+      visited[node] = true;
 
-    for (let dice = 1; dice <= 6; dice++) {
-      let next = now + dice;
-      if (next > 100) continue; // 100 넘어가면 무시
+      // 주사위 1 ~ 6
+      for (let i = 1; i <= 6; i++) {
+        let next = node + i;
 
-      if (map.has(next)) {
-        next = map.get(next);
-      }
+        if (ladder.has(next)) {
+          // 사다리
+          next = ladder.get(next);
+        } else if (snake.has(next)) {
+          // 뱀
+          next = snake.get(next);
+        }
 
-      if (!visited[next]) {
-        visited[next] = true;
-        queue.push(next);
-        count[next] = count[now] + 1;
+        if (next < 100) {
+          queue.push([next, cnt + 1]);
+        } else if (next === 100) {
+          result = cnt + 1;
+          idx = queue.length; // while문 탈출
+          break; // for문 탈출
+        }
       }
     }
+    idx++;
   }
 
-  console.log(count[100]);
+  console.log(result);
 });
