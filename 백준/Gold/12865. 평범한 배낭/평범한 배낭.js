@@ -1,29 +1,28 @@
-const input = require("fs")
-    .readFileSync(process.platform === "linux" ? "/dev/stdin" : "./input.txt")
-    .toString()
-    .trim()
-    .split("\n")
-    .map(el => el.split(" "));
-const n = parseInt(input[0][0]);
-const k = parseInt(input[0][1]);
-let items = [{}];
+const { join } = require("path");
+const readline = require("readline");
 
-for(let i = 1 ; i <= n ; i++) {
-    let item = {
-        weight: parseInt(input[i][0]),
-        cost: parseInt(input[i][1])
-    };
-    items.push(item);
-}
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-let dp = Array.from(Array(n+1), () => new Array(k+1).fill(0));
+const input = [];
 
-for(let i = 1 ; i <= n ; i++) {
-    for(let j = 1 ; j <= k ; j++) {
-        if(items[i].weight <= j)
-            dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-items[i].weight] + items[i].cost);
-        else
-            dp[i][j] = dp[i-1][j];
+rl.on("line", (line) => {
+  input.push(line);
+});
+
+rl.on("close", () => {
+  const [N, K] = input[0].split(" ").map(Number);
+  const dp = new Array(K + 1).fill(0);
+
+  for (let i = 0; i < N; i++) {
+    const [w, v] = input[i + 1].split(" ").map(Number);
+
+    for (let j = K; j >= w; j--) {
+      dp[j] = Math.max(dp[j], dp[j - w] + v);
     }
-}
-console.log(dp[n][k]);
+  }
+
+  console.log(dp[K]);
+});
