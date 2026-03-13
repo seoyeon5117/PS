@@ -12,22 +12,22 @@ rl.on("line", (line) => {
 });
 
 rl.on("close", () => {
-  const left = input[0].split(""); // 커서 왼쪽
-  const right = []; // 커서 오른쪽
-  const N = +input[1];
-  const cmd = input.slice(2).map((line) => line.split(" "));
-
-  for (const c of cmd) {
-    if (c[0] === "L") {
-      if (left.length > 0) right.push(left.pop());
-    } else if (c[0] === "D") {
-      if (right.length > 0) left.push(right.pop());
-    } else if (c[0] === "B") {
-      if (left.length > 0) left.pop();
-    } else if (c[0] === "P") {
-      left.push(c[1]);
+  const arr1 = input[0].split(""); // 커서 앞
+  const arr2 = []; // 커서 뒤
+  const M = +input[1];
+  for (let m = 0; m < M; m++) {
+    const cmd = input[m + 2];
+    if (cmd === "L") {
+      if (arr1.length > 0) arr2.push(arr1.pop());
+    } else if (cmd === "D") {
+      if (arr2.length > 0) arr1.push(arr2.pop());
+    } else if (cmd === "B") {
+      arr1.pop();
+    } else {
+      const [_, s] = cmd.split(" ");
+      arr1.push(s);
     }
   }
 
-  console.log(left.join("") + right.reverse().join(""));
+  console.log(arr1.join("") + arr2.reverse().join(""));
 });
