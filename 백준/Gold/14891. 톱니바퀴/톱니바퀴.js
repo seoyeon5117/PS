@@ -19,79 +19,44 @@ rl.on("close", () => {
     wheel[i] = input[i].split("").map(Number);
   }
   const K = +input[4];
-  let idx1 = 0;
-  let idx2 = 0;
-  let idx3 = 0;
-  let idx4 = 0;
+  const offsets = [0, 0, 0, 0];
 
   for (let i = 0; i < K; i++) {
+    const directions = [0, 0, 0, 0];
     const [num, direction] = input[i + 5].split(" ").map(Number);
     // num: 0 -> N극, 1 -> S극
     // direction: 1 -> 시계, -1 -> 반시계
+    const idx = num - 1;
+    directions[idx] = direction;
 
-    if (num === 1) {
-      if (wheel[0][(idx1 + 2) % 8] !== wheel[1][(idx2 + 6) % 8]) {
-        if (wheel[1][(idx2 + 2) % 8] !== wheel[2][(idx3 + 6) % 8]) {
-          if (wheel[2][(idx3 + 2) % 8] !== wheel[3][(idx4 + 6) % 8]) {
-            idx4 += direction;
-          }
-          idx3 -= direction;
-        }
-        idx2 += direction;
-      }
-      idx1 -= direction;
-    } else if (num === 2) {
-      if (wheel[0][(idx1 + 2) % 8] !== wheel[1][(idx2 + 6) % 8]) {
-        idx1 += direction;
-      }
-      if (wheel[1][(idx2 + 2) % 8] !== wheel[2][(idx3 + 6) % 8]) {
-        if (wheel[2][(idx3 + 2) % 8] !== wheel[3][(idx4 + 6) % 8]) {
-          idx4 -= direction;
-        }
-        idx3 += direction;
-      }
-      idx2 -= direction;
-    } else if (num === 3) {
-      if (wheel[1][(idx2 + 2) % 8] !== wheel[2][(idx3 + 6) % 8]) {
-        if (wheel[0][(idx1 + 2) % 8] !== wheel[1][(idx2 + 6) % 8]) {
-          idx1 -= direction;
-        }
-        idx2 += direction;
-      }
-      if (wheel[2][(idx3 + 2) % 8] !== wheel[3][(idx4 + 6) % 8]) {
-        idx4 += direction;
-      }
-      idx3 -= direction;
-    } else {
-      if (wheel[3][(idx4 + 6) % 8] !== wheel[2][(idx3 + 2) % 8]) {
-        if (wheel[2][(idx3 + 6) % 8] !== wheel[1][(idx2 + 2) % 8]) {
-          if (wheel[1][(idx2 + 6) % 8] !== wheel[0][(idx1 + 2) % 8]) {
-            idx1 += direction;
-          }
-          idx2 -= direction;
-        }
-        idx3 += direction;
-      }
-      idx4 -= direction;
+    for (let j = idx; j < 3; j++) {
+      if (
+        wheel[j][(offsets[j] + 2) % 8] !==
+        wheel[j + 1][(offsets[j + 1] + 6) % 8]
+      ) {
+        directions[j + 1] = -directions[j];
+      } else break;
     }
-    idx1 = (idx1 + 8) % 8;
-    idx2 = (idx2 + 8) % 8;
-    idx3 = (idx3 + 8) % 8;
-    idx4 = (idx4 + 8) % 8;
+
+    for (let j = idx; j > 0; j--) {
+      if (
+        wheel[j][(offsets[j] + 6) % 8] !==
+        wheel[j - 1][(offsets[j - 1] + 2) % 8]
+      ) {
+        directions[j - 1] = -directions[j];
+      } else break;
+    }
+
+    for (let j = 0; j < 4; j++) {
+      offsets[j] = (offsets[j] - directions[j] + 8) % 8;
+    }
   }
 
   let score = 0;
-  if (wheel[0][idx1] === 1) {
-    score += 1;
-  }
-  if (wheel[1][idx2] === 1) {
-    score += 2;
-  }
-  if (wheel[2][idx3] === 1) {
-    score += 4;
-  }
-  if (wheel[3][idx4] === 1) {
-    score += 8;
+  for (let j = 0; j < 4; j++) {
+    if (wheel[j][offsets[j]] === 1) {
+      score += 2 ** j;
+    }
   }
 
   console.log(score);
