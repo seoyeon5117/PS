@@ -1,7 +1,6 @@
 function solution(triangle) {
     let answer = 0;
     const height = triangle.length;
-    const cnt = (height + 1) * height / 2;
     const dp = Array.from({length : height}, () => new Array(height));
     dp[0][0] = triangle[0][0];
     
