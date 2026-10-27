@@ -1,17 +1,19 @@
 function solution(number) {
+    let len = number.length;
     let count = 0;
     
-    number.sort((a, b) => a - b);
-    const len = number.length;
-    
-    for(let i = 0 ; i < len - 2; i++) {
-        let sum = 0;
-        for(let j = i + 1 ; j < len - 1; j++) {
-            for(let k = j + 1 ; k < len; k++) {
-                if(number[i] + number[j] + number[k] === 0) count++;
-            }
+    function combination(start, picked, sum) {
+        if(picked === 3) {
+            if(sum === 0) count++;
+            return;
+        }
+        
+        for(let i = start; i < len ; i++) {
+            combination(i+1, picked + 1,  sum + number[i]);
         }
     }
+    
+    combination(0, 0, 0);
     
     return count;
 }
